@@ -14,6 +14,7 @@ namespace AllegroClient
 {
     using global::AllegroClient;
     using Newtonsoft.Json;
+    using System;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Threading.Tasks;
@@ -25,7 +26,8 @@ namespace AllegroClient
         private string _baseUrl = "https://api.allegro.pl/";
         private string _token;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
-    
+        private AllegroEnviromentType _enviroment = AllegroEnviromentType.Production;
+
         public AllegroClient()
         {
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
@@ -33,6 +35,8 @@ namespace AllegroClient
 
         public AllegroClient(AllegroEnviromentType allegroEnviroment,string token)
         {
+            
+            _enviroment = allegroEnviroment;
             SetBaseUrl(allegroEnviroment);
             _token = token;
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
@@ -45,6 +49,7 @@ namespace AllegroClient
 
         public void SetEnviroment(AllegroEnviromentType allegroEnviroment)
         {
+            _enviroment = allegroEnviroment;
             SetBaseUrl(allegroEnviroment);
         }
 
@@ -63,7 +68,7 @@ namespace AllegroClient
         private Newtonsoft.Json.JsonSerializerSettings CreateSerializerSettings()
         {
             var settings = new Newtonsoft.Json.JsonSerializerSettings();
-            settings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include;
+            settings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
             return settings;
         }
     
@@ -85,7 +90,11 @@ namespace AllegroClient
 
         public async  Task<TokenResponse> GetAuthToken(string authKey, string code,string redirectUri)
         {
-            var url = $"https://allegro.pl/auth/oauth/token?grant_type=authorization_code&code={code}&redirect_uri={redirectUri}";
+            string url;
+            if (_enviroment.Equals(AllegroEnviromentType.Production))
+                url = $"https://allegro.pl/auth/oauth/token?grant_type=authorization_code&code={code}&redirect_uri={redirectUri}&prompt=confirm";
+            else
+                url = $"https://allegro.pl.allegrosandbox.pl/auth/oauth/token?grant_type=authorization_code&code={code}&redirect_uri={redirectUri}&prompt=confirm";
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authKey);
             var response = await client.PostAsync(url,null);
@@ -208,7 +217,7 @@ namespace AllegroClient
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
                     var content_ = new System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(body, _settings.Value));
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/vnd.allegro.public.v1+json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/vnd.allegro.public.v1+json"));
@@ -443,9 +452,9 @@ namespace AllegroClient
         /// <param name="offerId">Offer identifier.</param>
         /// <returns>Offer updated successfully</returns>
         /// <exception cref="AllegroException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<Offer> SaleOffersPutAsync(string offerId, object body)
+        public System.Threading.Tasks.Task<Offer> SaleOffersPutAsync(string offerId, string bodyJson)
         {
-            return SaleOffersPutAsync(offerId, body, System.Threading.CancellationToken.None);
+            return SaleOffersPutAsync(offerId, bodyJson, System.Threading.CancellationToken.None);
         }
     
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -453,7 +462,7 @@ namespace AllegroClient
         /// <param name="offerId">Offer identifier.</param>
         /// <returns>Offer updated successfully</returns>
         /// <exception cref="AllegroException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<Offer> SaleOffersPutAsync(string offerId, object body, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<Offer> SaleOffersPutAsync(string offerId, string body, System.Threading.CancellationToken cancellationToken)
         {
             if (offerId == null)
                 throw new System.ArgumentNullException("offerId");
@@ -467,8 +476,8 @@ namespace AllegroClient
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var content_ = new System.Net.Http.StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(body, _settings.Value));
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    var content_ = new System.Net.Http.StringContent(body);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/vnd.allegro.public.v1+json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/vnd.allegro.public.v1+json"));
@@ -14813,7 +14822,7 @@ namespace AllegroClient
     
         /// <summary>Date when the refund application was created.</summary>
         [Newtonsoft.Json.JsonProperty("createdAt")]
-        public System.DateTimeOffset CreatedAt { get; set; }
+        public System.DateTimeOffset ?CreatedAt { get; set; }
     
         /// <summary>Purchase associated with the refund application.</summary>
         [Newtonsoft.Json.JsonProperty("lineItem")]
@@ -17584,7 +17593,7 @@ namespace AllegroClient
     
         /// <summary>Creation date: Format (ISO 8601) - yyyy-MM-dd'T'HH:mm:ss.SSSZ. Cannot be modified.</summary>
         [Newtonsoft.Json.JsonProperty("createdAt")]
-        public System.DateTimeOffset CreatedAt { get; set; }
+        public System.DateTimeOffset? CreatedAt { get; set; }
     
         [Newtonsoft.Json.JsonProperty("delivery")]
         public Delivery Delivery { get; set; }
@@ -17643,7 +17652,7 @@ namespace AllegroClient
     
         /// <summary>Last update date: Format (ISO 8601) - yyyy-MM-dd'T'HH:mm:ss.SSSZ. Cannot be modified</summary>
         [Newtonsoft.Json.JsonProperty("updatedAt")]
-        public System.DateTimeOffset UpdatedAt { get; set; }
+        public System.DateTimeOffset? UpdatedAt { get; set; }
     
         [Newtonsoft.Json.JsonProperty("validation")]
         public Validation Validation { get; set; }
@@ -28249,7 +28258,15 @@ namespace AllegroClient
                 _isWriting = true;
     
                 var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
+                try
+                {
+
                 jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, GetSubtypeDiscriminator(value.GetType())));
+                }
+                catch(ArgumentException e)
+                {
+                    var a = 1;
+                }   
                 writer.WriteToken(jObject.CreateReader());
             }
             finally
@@ -28373,6 +28390,11 @@ namespace AllegroClient
         public string Response { get; private set; }
 
         public System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; private set; }
+
+        public AllegroException(string message , int statusCode):base(message)
+        {
+            StatusCode = statusCode;
+        }
 
         public AllegroException(string message, int statusCode, string response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception innerException) 
             : base(message + "\n\nStatus: " + statusCode + "\nResponse: \n" + response.Substring(0, response.Length >= 512 ? 512 : response.Length), innerException)

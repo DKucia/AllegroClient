@@ -8,6 +8,8 @@ namespace AllegroClient
 {
     public partial interface IAllegroClient
     {
+        public void SetEnviroment(AllegroEnviromentType allegroEnviroment);
+        public void SetToken(string token);
         /// <summary>
         /// Get Token
         /// </summary>
@@ -82,14 +84,14 @@ namespace AllegroClient
         /// <param name="offerId">Offer identifier.</param>
         /// <returns>Offer updated successfully</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<Offer> SaleOffersPutAsync(string offerId, object body);
+        System.Threading.Tasks.Task<Offer> SaleOffersPutAsync(string offerId, string bodyJson);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Complete a draft offer or edit an offer</summary>
         /// <param name="offerId">Offer identifier.</param>
         /// <returns>Offer updated successfully</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<Offer> SaleOffersPutAsync(string offerId, object body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<Offer> SaleOffersPutAsync(string offerId, string body, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>Get all fields of the particular offer</summary>
         /// <param name="offerId">Offer identifier.</param>
