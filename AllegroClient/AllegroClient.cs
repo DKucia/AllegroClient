@@ -16699,7 +16699,7 @@ namespace AllegroClient
     
         /// <summary>Shipment date, Format (ISO 8601) - yyyy-MM-dd'T'HH:mm:ss.SSSZ</summary>
         [Newtonsoft.Json.JsonProperty("shipmentDate")]
-        public System.DateTimeOffset ShipmentDate { get; set; }
+        public string ShipmentDate { get; set; }
     
         [Newtonsoft.Json.JsonProperty("shippingRates")]
         public JustId ShippingRates { get; set; }
@@ -19701,7 +19701,7 @@ namespace AllegroClient
     
         /// <summary>Date and time for scheduling ACTIVATE action, will be ignored for another actions</summary>
         [Newtonsoft.Json.JsonProperty("scheduledFor")]
-        public System.DateTimeOffset ScheduledFor { get; set; }
+        public System.DateTimeOffset? ScheduledFor { get; set; }
     
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
     

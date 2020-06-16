@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AllegroClient
@@ -13,7 +10,7 @@ namespace AllegroClient
         private const string _allegroUploadUrl = "https://upload.allegro.pl/sale/images";
         private const string _allegroSandboxUploadUrl = "https://upload.allegro.pl.allegrosandbox.pl/sale/images";
 
-        public async  Task<AllegroPictureResponse> UploadAsync(byte[] binaryPicture,string token,bool useSandbox)
+        public async Task<AllegroPictureResponse> UploadAsync(byte[] binaryPicture, string token, bool useSandbox)
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization =

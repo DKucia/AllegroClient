@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 
 namespace AllegroClient
@@ -16,7 +15,7 @@ namespace AllegroClient
         /// <param name="authKey">clientId:SecretKey in base64 fromat</param>
         /// <param name="code">user code</param>
         /// <returns></returns>
-        System.Threading.Tasks.Task<TokenResponse> GetAuthToken(string authKey, string code,string redirectUrl);
+        System.Threading.Tasks.Task<TokenResponse> GetAuthToken(string authKey, string code, string redirectUrl);
 
         /// <summary>Modify the Buy Now price in an offer</summary>
         /// <param name="offerId">The offer identifier.</param>
