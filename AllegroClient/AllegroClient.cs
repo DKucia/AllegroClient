@@ -18779,11 +18779,11 @@ namespace AllegroClient
     
         /// <summary>Publication ending date: Format (ISO 8601) - yyyy-MM-dd'T'HH:mm:ss.SSSZ. Cannot be modified</summary>
         [Newtonsoft.Json.JsonProperty("endingAt")]
-        public System.DateTimeOffset EndingAt { get; set; }
+        public System.DateTimeOffset? EndingAt { get; set; }
     
         /// <summary>Publication starting date: Format (ISO 8601) - yyyy-MM-dd'T'HH:mm:ss.SSSZ. Cannot be modified</summary>
         [Newtonsoft.Json.JsonProperty("startingAt")]
-        public System.DateTimeOffset StartingAt { get; set; }
+        public System.DateTimeOffset ? StartingAt { get; set; }
     
         [Newtonsoft.Json.JsonProperty("status")]
         [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
