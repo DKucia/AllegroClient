@@ -1514,7 +1514,7 @@ namespace AllegroClient
         /// <param name="body">request</param>
         /// <returns>Fulfillment set successfully</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task OrderCheckoutFormsFulfillmentAsync(string id, string checkoutForm_revision, CheckoutFormFulfillment body);
+        System.Threading.Tasks.Task OrderCheckoutFormsFulfillmentAsync(string id, string checkoutForm_revision, CheckoutFormFulfillmentChange body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>Set seller order status</summary>
@@ -1523,7 +1523,7 @@ namespace AllegroClient
         /// <param name="body">request</param>
         /// <returns>Fulfillment set successfully</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task OrderCheckoutFormsFulfillmentAsync(string id, string checkoutForm_revision, CheckoutFormFulfillment body, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task OrderCheckoutFormsFulfillmentAsync(string id, string checkoutForm_revision, CheckoutFormFulfillmentChange body, System.Threading.CancellationToken cancellationToken);
 
         /// <summary>Get the user's disputes</summary>
         /// <param name="checkoutForm_id">Checkout form identifier.</param>

@@ -9767,7 +9767,7 @@ namespace AllegroClient
         /// <param name="body">request</param>
         /// <returns>Fulfillment set successfully</returns>
         /// <exception cref="AllegroException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task OrderCheckoutFormsFulfillmentAsync(string id, string checkoutForm_revision, CheckoutFormFulfillment body)
+        public System.Threading.Tasks.Task OrderCheckoutFormsFulfillmentAsync(string id, string checkoutForm_revision, CheckoutFormFulfillmentChange body)
         {
             return OrderCheckoutFormsFulfillmentAsync(id, checkoutForm_revision, body, System.Threading.CancellationToken.None);
         }
@@ -9779,7 +9779,7 @@ namespace AllegroClient
         /// <param name="body">request</param>
         /// <returns>Fulfillment set successfully</returns>
         /// <exception cref="AllegroException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task OrderCheckoutFormsFulfillmentAsync(string id, string checkoutForm_revision, CheckoutFormFulfillment body, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task OrderCheckoutFormsFulfillmentAsync(string id, string checkoutForm_revision, CheckoutFormFulfillmentChange body, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -21464,7 +21464,27 @@ namespace AllegroClient
     
     
     }
-    
+
+    public partial class CheckoutFormFulfillmentChange
+    {
+        [Newtonsoft.Json.JsonProperty("status")]
+        public string Status { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("shipmentSummary")]
+        public CheckoutFormFulfillmentShipmentSummary ShipmentSummary { get; set; }
+
+        private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
+
+        [Newtonsoft.Json.JsonExtensionData]
+        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
+        {
+            get { return _additionalProperties; }
+            set { _additionalProperties = value; }
+        }
+
+
+    }
+
     /// <summary>Order seller status.
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.15.0 (Newtonsoft.Json v12.0.0.2)")]
