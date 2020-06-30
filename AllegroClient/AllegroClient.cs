@@ -25,12 +25,14 @@ namespace AllegroClient
     {
         private string _baseUrl = "https://api.allegro.pl/";
         private string _token;
+        private string _lang;
         private System.Lazy<Newtonsoft.Json.JsonSerializerSettings> _settings;
         private AllegroEnviromentType _enviroment = AllegroEnviromentType.Production;
 
         public AllegroClient()
         {
             _settings = new System.Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
+            _lang = AllegroLanguage.PL;
         }
 
         public AllegroClient(AllegroEnviromentType allegroEnviroment,string token)
@@ -45,6 +47,11 @@ namespace AllegroClient
         public void SetToken(string token )
         {
             _token = token;
+        }
+
+        public void  SetLanguage(string lang)
+        {
+            _lang = lang;
         }
 
         public void SetEnviroment(AllegroEnviromentType allegroEnviroment)
@@ -84,6 +91,7 @@ namespace AllegroClient
         private void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, string url)
         {
             request.Headers.Add("Authorization", "Bearer "+_token);
+            request.Headers.Add("Accept-Language", _lang);
         }
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
@@ -102,6 +110,25 @@ namespace AllegroClient
             {
                 var objectResponse =await  response.Content.ReadAsStringAsync();
                 throw new AllegroException<ErrorsHolder>("The request query parameters are invalid.", (int)response.StatusCode, objectResponse,  null,null,null);
+            }
+
+            return JsonConvert.DeserializeObject<TokenResponse>(await response.Content.ReadAsStringAsync());
+
+        }
+
+        public async Task<TokenResponse> RefreshAuthToken(string refreshToken, string redirectUri)
+        {
+            string url;
+            if (_enviroment.Equals(AllegroEnviromentType.Production))
+                url = $"https://allegro.pl/auth/oauth/token?grant_type=refresh_token&refresh_token={refreshToken}&redirect_uri={redirectUri}";
+            else
+                url = $"https://allegro.pl.allegrosandbox.pl/auth/oauth/token?grant_type=refresh_token&refresh_token={refreshToken}&redirect_uri={redirectUri}";
+            var client = new HttpClient();
+            var response = await client.PostAsync(url, null);
+            if (!response.IsSuccessStatusCode)
+            {
+                var objectResponse = await response.Content.ReadAsStringAsync();
+                throw new AllegroException<ErrorsHolder>("The request query parameters are invalid.", (int)response.StatusCode, objectResponse, null, null, null);
             }
 
             return JsonConvert.DeserializeObject<TokenResponse>(await response.Content.ReadAsStringAsync());

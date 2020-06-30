@@ -1,7 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 
 namespace AllegroClient
 {
@@ -9,12 +9,15 @@ namespace AllegroClient
     {
         public void SetEnviroment(AllegroEnviromentType allegroEnviroment);
         public void SetToken(string token);
+        void SetLanguage(string lang);
         /// <summary>
         /// Get Token
         /// </summary>
         /// <param name="authKey">clientId:SecretKey in base64 fromat</param>
         /// <param name="code">user code</param>
         /// <returns></returns>
+        /// 
+        Task<TokenResponse> RefreshAuthToken(string refreshToken, string redirectUri);
         System.Threading.Tasks.Task<TokenResponse> GetAuthToken(string authKey, string code, string redirectUrl);
 
         /// <summary>Modify the Buy Now price in an offer</summary>
